@@ -305,6 +305,6 @@ endif;
  */
 if ( ! function_exists( 'tgbt_plugin_not_installed' ) ) {
 	function tgbt_plugin_not_installed() {
-		echo '<div class="error"><p>' . sprintf( __( 'ThemeGrill Beta Tester requires %s to be installed.', 'themegrill-beta-tester' ), '<a href="https://themegrill.com/plugins/" target="_blank">ThemeGrill plugin</a>' ) . '</p></div>';
+		echo '<div class="error"><p>' . sprintf( __( 'ThemeGrill Beta Tester requires any one %s to be installed.', 'themegrill-beta-tester' ), '<a href="https://themegrill.com/plugins/" target="_blank">ThemeGrill plugins</a>' ) . '</p></div>';
 	}
 }

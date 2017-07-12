@@ -1,7 +1,7 @@
 === ThemeGrill Beta Tester ===
 Author URI: https://themegrill.com/
 Plugin URI: https://github.com/themegrill/themegrill-beta-tester
-Contributors: axisthemes, shivapoudel
+Contributors: ThemeGrill, shivapoudel
 Tags: themegrill, tg, beta, beta tester, bleeding edge
 Requires at least: 4.2
 Tested up to: 4.8
