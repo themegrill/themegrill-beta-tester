@@ -15,12 +15,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+if ( ! defined( 'TG_BETA_TEST_PLUGIN_SLUG' ) ) {
+	define( 'TG_BETA_TEST_PLUGIN_SLUG', 'easy-social-sharing' );
+}
+
+if ( ! defined( 'TG_BETA_TEST_PLUGIN_BASENAME' ) ) {
+	define( 'TG_BETA_TEST_PLUGIN_BASENAME', 'easy-social-sharing/easy-social-sharing.php' );
+}
+
 /**
  * Confirm ThemeGrill plugin is at least installed before doing anything
  * Curiously, developers are discouraged from using WP_PLUGIN_DIR and not given a
  * function with which to get the plugin directory, so this is what we have to do
  */
-if ( ! file_exists( trailingslashit( dirname( dirname( __FILE__ ) ) ) . 'easy-social-sharing/easy-social-sharing.php' ) ) :
+if ( ! file_exists( trailingslashit( dirname( dirname( __FILE__ ) ) ) . TG_BETA_TEST_PLUGIN_BASENAME ) ) :
 
 	add_action( 'admin_notices', 'tgbt_plugin_not_installed' );
 
@@ -29,10 +37,7 @@ elseif ( ! class_exists( 'TG_Beta_Tester' ) ) :
 	/**
 	 * TG_Beta_Tester Main Class
 	 */
-	class TG_Beta_Tester {
-
-		public $plugin_slug     = 'easy-social-sharing';
-		public $plugin_basename = 'easy-social-sharing/easy-social-sharing.php';
+	final class TG_Beta_Tester {
 
 		/** Github Data */
 		private $config = array();
@@ -59,11 +64,11 @@ elseif ( ! class_exists( 'TG_Beta_Tester' ) ) :
 		 */
 		public function __construct() {
 			$this->config = array(
-				'plugin_file'        => $this->plugin_basename,
-				'slug'               => $this->plugin_slug,
-				'proper_folder_name' => $this->plugin_slug,
-				'api_url'            => 'https://api.github.com/repos/themegrill/' . $this->plugin_slug,
-				'github_url'         => 'https://github.com/themegrill/' . $this->plugin_slug,
+				'plugin_file'        => 'easy-social-sharing/easy-social-sharing.php',
+				'slug'               => TG_BETA_TEST_PLUGIN_SLUG,
+				'proper_folder_name' => TG_BETA_TEST_PLUGIN_SLUG,
+				'api_url'            => 'https://api.github.com/repos/themegrill/' . TG_BETA_TEST_PLUGIN_SLUG,
+				'github_url'         => 'https://github.com/themegrill/' . TG_BETA_TEST_PLUGIN_SLUG,
 				'requires'           => '4.2',
 				'tested'             => '4.8'
 			);
@@ -85,7 +90,7 @@ elseif ( ! class_exists( 'TG_Beta_Tester' ) ) :
 			$this->config[ 'new_version' ]  = $this->get_latest_tag();
 			$this->config[ 'last_updated' ] = $this->get_date();
 			$this->config[ 'description' ]  = $this->get_description();
-			$this->config[ 'zip_url' ]      = "https://github.com/themegrill/{$this->plugin_slug}/zipball/{$this->config[ 'new_version' ]}";
+			$this->config[ 'zip_url' ]      = "https://github.com/themegrill/{$this->config['slug']}/zipball/{$this->config[ 'new_version' ]}";
 		}
 
 		/**
@@ -296,11 +301,10 @@ elseif ( ! class_exists( 'TG_Beta_Tester' ) ) :
 endif;
 
 /**
- * AxisComposer Not Installed Notice.
+ * ThemeGrill Plugin Not Installed Notice.
  */
 if ( ! function_exists( 'tgbt_plugin_not_installed' ) ) {
-
-	function acbt_axiscomposer_not_installed() {
-		echo '<div class="error"><p>' . sprintf( __( 'ThemeGrill Beta Tester requires %s to be installed.', 'themegrill-beta-tester' ), '<a href="http://themegrill.com/themegrill-beta-tester/" target="_blank">ThemeGrill</a>' ) . '</p></div>';
+	function tgbt_plugin_not_installed() {
+		echo '<div class="error"><p>' . sprintf( __( 'ThemeGrill Beta Tester requires %s to be installed.', 'themegrill-beta-tester' ), '<a href="https://themegrill.com/plugins/" target="_blank">ThemeGrill plugin</a>' ) . '</p></div>';
 	}
 }
