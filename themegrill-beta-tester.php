@@ -15,16 +15,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! defined( 'TG_BETA_TEST_PLUGIN_FILE' ) ) {
-	define( 'TG_BETA_TEST_PLUGIN_FILE', RP_PLUGIN_BASENAME );
+if ( ! defined( 'TG_BETA_TEST_GITHUB_REPO_OWNER' ) ) {
+	define( 'TG_BETA_TEST_GITHUB_REPO_OWNER', 'wpeverest' );
 }
 
 if ( ! defined( 'TG_BETA_TEST_PLUGIN_SLUG' ) ) {
 	define( 'TG_BETA_TEST_PLUGIN_SLUG', 'restaurantpress' );
 }
 
-if ( ! defined( 'TG_BETA_TEST_GITHUB_OWNER' ) ) {
-	define( 'TG_BETA_TEST_GITHUB_OWNER', 'wpeverest' );
+if ( ! defined( 'TG_BETA_TEST_PLUGIN_BASENAME' ) ) {
+	define( 'TG_BETA_TEST_PLUGIN_BASENAME', 'restaurantpress/restaurantpress.php' );
 }
 
 /**
@@ -32,7 +32,7 @@ if ( ! defined( 'TG_BETA_TEST_GITHUB_OWNER' ) ) {
  * Curiously, developers are discouraged from using WP_PLUGIN_DIR and not given a
  * function with which to get the plugin directory, so this is what we have to do
  */
-if ( ! file_exists( trailingslashit( dirname( dirname( __FILE__ ) ) ) . plugin_basename( TG_BETA_TEST_PLUGIN_FILE ) ) ) :
+if ( ! file_exists( trailingslashit( dirname( dirname( __FILE__ ) ) ) . TG_BETA_TEST_PLUGIN_BASENAME ) ) :
 
 	add_action( 'admin_notices', 'tgbt_plugin_not_installed' );
 
@@ -61,6 +61,7 @@ elseif ( ! class_exists( 'TG_Beta_Tester' ) ) :
 		 */
 		public static function activate() {
 			delete_site_transient( 'update_plugins' );
+			delete_site_transient( TG_BETA_TEST_PLUGIN_SLUG . '_latest_tag' );
 		}
 
 		/**
@@ -68,12 +69,12 @@ elseif ( ! class_exists( 'TG_Beta_Tester' ) ) :
 		 */
 		public function __construct() {
 			$this->config = array(
-				'plugin_file'        => TG_BETA_TEST_PLUGIN_FILE,
+				'plugin_file'        => TG_BETA_TEST_PLUGIN_BASENAME,
 				'slug'               => TG_BETA_TEST_PLUGIN_SLUG,
 				'proper_folder_name' => TG_BETA_TEST_PLUGIN_SLUG,
-				'github_owner'       => TG_BETA_TEST_GITHUB_OWNER,
-				'api_url'            => 'https://api.github.com/repos/' . TG_BETA_TEST_GITHUB_OWNER . '/' . TG_BETA_TEST_PLUGIN_SLUG,
-				'github_url'         => 'https://github.com/' . TG_BETA_TEST_GITHUB_OWNER . '/' . TG_BETA_TEST_PLUGIN_SLUG,
+				'github_repo_owner'  => TG_BETA_TEST_GITHUB_REPO_OWNER,
+				'api_url'            => 'https://api.github.com/repos/' . TG_BETA_TEST_GITHUB_REPO_OWNER . '/' . TG_BETA_TEST_PLUGIN_SLUG,
+				'github_url'         => 'https://github.com/' . TG_BETA_TEST_GITHUB_REPO_OWNER . '/' . TG_BETA_TEST_PLUGIN_SLUG,
 				'requires'           => '4.2',
 				'tested'             => '4.8'
 			);
@@ -92,10 +93,10 @@ elseif ( ! class_exists( 'TG_Beta_Tester' ) ) :
 			$this->config[ 'version' ]      = $plugin_data['Version'];
 			$this->config[ 'author' ]       = $plugin_data['Author'];
 			$this->config[ 'homepage' ]     = $plugin_data['PluginURI'];
-			$this->config[ 'new_version' ]  = $this->get_latest_tag();
+			$this->config[ 'new_version' ]  = $this->get_latest_prerelease();
 			$this->config[ 'last_updated' ] = $this->get_date();
 			$this->config[ 'description' ]  = $this->get_description();
-			$this->config[ 'zip_url' ]      = "https://github.com/{$this->config['github_owner']}/{$this->config['slug']}/zipball/{$this->config[ 'new_version' ]}";
+			$this->config[ 'zip_url' ]      = "https://github.com/{$this->config['github_repo_owner']}/{$this->config['slug']}/zipball/{$this->config[ 'new_version' ]}";
 		}
 
 		/**
@@ -113,22 +114,27 @@ elseif ( ! class_exists( 'TG_Beta_Tester' ) ) :
 		 * @since  1.0
 		 * @return int $version the version number
 		 */
-		public function get_latest_tag() {
+		public function get_latest_prerelease() {
 			$tagged_version = get_site_transient( md5( $this->config['slug'] ) . '_latest_tag' );
 
 			if ( $this->overrule_transients() || empty( $tagged_version ) ) {
 
-				$raw_response = wp_remote_get( trailingslashit( $this->config['api_url'] ) . 'tags' );
+				$raw_response = wp_remote_get( trailingslashit( $this->config['api_url'] ) . 'releases' );
 
 				if ( is_wp_error( $raw_response ) ) {
 					return false;
 				}
 
-				$tags = json_decode( $raw_response['body'] );
+				$releases       = json_decode( $raw_response['body'] );
+				$tagged_version = false;
 
-				if ( is_array( $tags ) ) {
-					$latest_tag     = $tags[0];
-					$tagged_version = $latest_tag->name;
+				if ( is_array( $releases ) ) {
+					foreach ( $releases as $release ) {
+						if ( $release->prerelease ) {
+							$tagged_version = $release->tag_name;
+							break;
+						}
+					}
 				}
 
 				// Refresh every 6 hours
@@ -161,7 +167,7 @@ elseif ( ! class_exists( 'TG_Beta_Tester' ) ) :
 
 					$github_data = json_decode( $github_data['body'] );
 
-					// refresh every 6 hours
+					// Refresh every 6 hours
 					set_site_transient( md5( $this->config['slug'] ) . '_github_data', $github_data, 60*60*6 );
 				}
 
@@ -285,7 +291,7 @@ elseif ( ! class_exists( 'TG_Beta_Tester' ) ) :
 		public function upgrader_source_selection( $source, $remote_source, $upgrader ) {
 			global $wp_filesystem;
 
-			if ( strstr( $source, "/{$this->config['github_owner']}-" . $this->plugin_slug . '-' ) ) {
+			if ( strstr( $source, "/{$this->config['github_owner']}-{$this->config['slug']}-" ) ) {
 				$corrected_source = trailingslashit( $remote_source ) . trailingslashit( $this->config[ 'proper_folder_name' ] );
 
 				if ( $wp_filesystem->move( $source, $corrected_source, true ) ) {
