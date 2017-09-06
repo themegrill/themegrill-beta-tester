@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/themegrill/themegrill-beta-tester
  * Description: Run bleeding edge versions of ThemeGrill plugins from our Github repo.
  * Version: 1.0.0
- * Author: ThemeGrill
+ * Author: Shiva Poudel
  * Author URI: http://themegrill.com
  * Requires at least: 4.2
  * Tested up to: 4.8
@@ -16,11 +16,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'TG_BETA_TEST_PLUGIN_SLUG' ) ) {
-	define( 'TG_BETA_TEST_PLUGIN_SLUG', 'easy-social-sharing' );
+	define( 'TG_BETA_TEST_PLUGIN_SLUG', 'restaurantpress' );
 }
 
 if ( ! defined( 'TG_BETA_TEST_PLUGIN_BASENAME' ) ) {
-	define( 'TG_BETA_TEST_PLUGIN_BASENAME', 'easy-social-sharing/easy-social-sharing.php' );
+	define( 'TG_BETA_TEST_PLUGIN_BASENAME', 'restaurantpress/restaurantpress.php' );
 }
 
 /**
