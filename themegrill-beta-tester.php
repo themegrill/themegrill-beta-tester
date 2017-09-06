@@ -72,7 +72,7 @@ elseif ( ! class_exists( 'TG_Beta_Tester' ) ) :
 				'plugin_file'        => TG_BETA_TEST_PLUGIN_BASENAME,
 				'slug'               => TG_BETA_TEST_PLUGIN_SLUG,
 				'proper_folder_name' => TG_BETA_TEST_PLUGIN_SLUG,
-				'github_repo_owner'  => TG_BETA_TEST_GITHUB_REPO_OWNER,
+				'github_owner'       => TG_BETA_TEST_GITHUB_REPO_OWNER,
 				'api_url'            => 'https://api.github.com/repos/' . TG_BETA_TEST_GITHUB_REPO_OWNER . '/' . TG_BETA_TEST_PLUGIN_SLUG,
 				'github_url'         => 'https://github.com/' . TG_BETA_TEST_GITHUB_REPO_OWNER . '/' . TG_BETA_TEST_PLUGIN_SLUG,
 				'requires'           => '4.2',
@@ -96,7 +96,7 @@ elseif ( ! class_exists( 'TG_Beta_Tester' ) ) :
 			$this->config[ 'new_version' ]  = $this->get_latest_prerelease();
 			$this->config[ 'last_updated' ] = $this->get_date();
 			$this->config[ 'description' ]  = $this->get_description();
-			$this->config[ 'zip_url' ]      = "https://github.com/{$this->config['github_repo_owner']}/{$this->config['slug']}/zipball/{$this->config[ 'new_version' ]}";
+			$this->config[ 'zip_url' ]      = "https://github.com/{$this->config['github_owner']}/{$this->config['slug']}/zipball/{$this->config[ 'new_version' ]}";
 		}
 
 		/**
