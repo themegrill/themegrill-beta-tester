@@ -28,28 +28,38 @@ class BetaTesterSettingsPage
             update_option('tgbt_organization_field',$org);
             update_option('tgbt_plugin_field',$plugin);
 
-            echo "Settings Updated!!";
+            echo "<div class='notice notice-success is-dismissible'><p>Settings Updated!!</p></div>";
         }
-            echo 'Settings Page:<br>';
+            echo '<h1> Settings Page</h1>';
             ?>
                 <form method="post" action=" <?php echo  $_SERVER['REQUEST_URI'] ;?>">
-
-                    <label>Github Repository Owner:</label>
-
-                    <select name="organization">
-                        <option  <?php if (get_option('tgbt_organization_field')=="WPEVerest") echo "selected='selected'";?> >WPEVerest</option>
-                        <option  <?php if (get_option('tgbt_organization_field')=="ThemeGrill") echo "selected='selected'";?> >ThemeGrill</option>
-                    </select><br>
-
-                    <label>Theme/Plugin For Beta Test</label>
-                    <select name="plugin">
+                <table class="form-table">
+                <tr>
+                    <th scope="row"><label>Github Repository Owner:</label></th>  
+                    <td>
+                    <select class="category-select" name="organization">
+                            <option  <?php if (get_option('tgbt_organization_field')=="WPEVerest") echo "selected='selected'";?> >WPEVerest</option>
+                            <option  <?php if (get_option('tgbt_organization_field')=="ThemeGrill") echo "selected='selected'";?> >ThemeGrill</option>
+                    </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><label>Theme/Plugin For Beta Test:</label></th>
+                    <td>
+                    <select class="category-select" name="plugin">
                         <option <?php if (get_option('tgbt_plugin_field')=="user-registration") echo "selected='selected'";?> >user-registration</option>
                         <option <?php if (get_option('tgbt_plugin_field')=="restaurantpress") echo "selected='selected'";?> >restaurantpress</option>
                         <option <?php if (get_option('tgbt_plugin_field')=="flash") echo "selected='selected'";?> >flash</option>
                         <option <?php if (get_option('tgbt_plugin_field')=="spacious") echo "selected='selected'";?> >spacious</option>
-                    </select><br>
+                    </select>
+                    </td>
+                </tr>
 
-                    <input type="submit" name="submit">
+                <tr>
+                   <td> <input class="button button-primary" type="submit" name="submit"></td>
+                </tr>
+
+                </table>
                 </form>         
             <?php
 
