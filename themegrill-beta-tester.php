@@ -11,20 +11,24 @@
  *
  * Based on WP_GitHub_Updater by Joachim Kudish.
  */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once plugin_dir_path( __FILE__ ) . '/class-BetaTesterSettingsPage.php';
+
+
 if ( ! defined( 'TG_BETA_TEST_GITHUB_REPO_OWNER' ) ) {
-	define( 'TG_BETA_TEST_GITHUB_REPO_OWNER', 'wpeverest' );
+	define( 'TG_BETA_TEST_GITHUB_REPO_OWNER', get_option('tgbt_organization_field'));
 }
 
 if ( ! defined( 'TG_BETA_TEST_PLUGIN_SLUG' ) ) {
-	define( 'TG_BETA_TEST_PLUGIN_SLUG', 'restaurantpress' );
+	define( 'TG_BETA_TEST_PLUGIN_SLUG', get_option('tgbt_plugin_field'));
 }
 
 if ( ! defined( 'TG_BETA_TEST_PLUGIN_BASENAME' ) ) {
-	define( 'TG_BETA_TEST_PLUGIN_BASENAME', 'restaurantpress/restaurantpress.php' );
+	define( 'TG_BETA_TEST_PLUGIN_BASENAME', get_option('tgbt_plugin_field').'/'.get_option('tgbt-plugin-field').'.php' );
 }
 
 /**
@@ -32,6 +36,7 @@ if ( ! defined( 'TG_BETA_TEST_PLUGIN_BASENAME' ) ) {
  * Curiously, developers are discouraged from using WP_PLUGIN_DIR and not given a
  * function with which to get the plugin directory, so this is what we have to do
  */
+
 if ( ! file_exists( trailingslashit( dirname( dirname( __FILE__ ) ) ) . TG_BETA_TEST_PLUGIN_BASENAME ) ) :
 
 	add_action( 'admin_notices', 'tgbt_plugin_not_installed' );
